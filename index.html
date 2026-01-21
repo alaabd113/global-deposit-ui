@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Deposit AI: Sentient</title>
+    <title>AETHER: The Breach</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Manrope:wght@200;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Manrope:wght@200;400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -13,28 +13,19 @@
             theme: {
                 extend: {
                     colors: {
-                        void: '#020408', 
-                        glass: 'rgba(255, 255, 255, 0.03)',
-                        cyan: { DEFAULT: '#00f3ff', dim: 'rgba(0, 243, 255, 0.1)' },
-                        amber: { DEFAULT: '#d97706', dim: 'rgba(217, 119, 6, 0.1)' }, // For "Quiet" Warnings
+                        void: '#030303',
+                        glass: 'rgba(255, 255, 255, 0.05)',
                     },
                     fontFamily: {
                         sans: ['Manrope', 'sans-serif'],
+                        display: ['Syncopate', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace'],
                     },
                     animation: {
-                        'awaken': 'awaken 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
-                        'breathe-slow': 'breathe 8s ease-in-out infinite',
+                        'float': 'float 10s ease-in-out infinite',
                     },
                     keyframes: {
-                        awaken: {
-                            '0%': { opacity: '0', filter: 'blur(10px)' },
-                            '100%': { opacity: '1', filter: 'blur(0)' },
-                        },
-                        breathe: {
-                            '0%, 100%': { opacity: '0.4' },
-                            '50%': { opacity: '0.6' }, // Subtle change only
-                        }
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }
                     }
                 }
             }
@@ -42,275 +33,276 @@
     </script>
 
     <style>
-        body { background-color: #020408; color: #fff; overflow: hidden; }
-
-        /* 🌌 The Void Container */
-        .stage {
-            opacity: 0; /* Starts invisible (Rule 1) */
-            transition: opacity 2s ease-in-out;
-        }
-        .stage.active { opacity: 1; }
-
-        /* ⚛️ The Heavy Reactor (3D Perspective) */
-        .reactor-scene {
-            perspective: 800px; /* Strong Depth */
-            width: 200px;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .reactor-ring {
-            position: absolute;
-            border-radius: 50%;
-            transform-style: preserve-3d;
-        }
-
-        /* Outer Blocks - Heavy & Slow (Rule 2) */
-        .ring-outer {
-            width: 100%; height: 100%;
-            border: 2px dashed rgba(0, 243, 255, 0.3);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
-            animation: spin 40s linear infinite; /* Very Slow */
-        }
-
-        /* Inner Structure - Reverse */
-        .ring-inner {
-            width: 70%; height: 70%;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            animation: spin 25s linear infinite reverse;
-        }
-
-        /* The Core "Eye" */
-        .core-eye {
-            width: 10px; height: 10px;
-            background: #00f3ff;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #00f3ff;
-            opacity: 0.5;
-            transition: all 0.5s ease-out;
-            animation: breathe 6s ease-in-out infinite; /* Rule 2 */
-        }
-
-        /* States for the Reactor */
-        .reactor-container.processing .ring-outer { animation-duration: 2s; border-color: #fff; opacity: 1; }
-        .reactor-container.processing .core-eye { box-shadow: 0 0 50px #fff; background: #fff; }
+        body { margin: 0; background-color: #030303; color: #fff; overflow: hidden; user-select: none; }
         
-        /* Rule 5: Quiet Error State */
-        .reactor-container.offline .ring-outer { border-color: #333; animation: none; transform: rotate(45deg); }
-        .reactor-container.offline .core-eye { background: #333; box-shadow: none; }
-        .reactor-container.offline .ring-inner { border-color: #333; animation: none; }
+        /* 🌌 1. Background Layers */
+        #neural-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .shockwave { position: fixed; top: 50%; left: 50%; width: 0; height: 0; border-radius: 50%; box-shadow: 0 0 50px 20px rgba(255,255,255,0.8); opacity: 0; transform: translate(-50%, -50%); pointer-events: none; z-index: 5; }
+        .shockwave.active { animation: shockwave 0.8s ease-out forwards; }
+        @keyframes shockwave { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 200vmax; height: 200vmax; opacity: 0; } }
 
-        /* 🔲 Minimal Button */
-        .btn-void {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.3);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); /* Slow transition */
+        /* 🔲 2. UI Elements */
+        .monolith {
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
         }
-        .btn-void:hover {
-            border-color: rgba(0, 243, 255, 0.3);
-            color: rgba(0, 243, 255, 0.8);
-            letter-spacing: 0.3em; /* Subtle expansion */
-        }
-        .btn-void:active {
-            transform: scale(0.98);
-        }
-
-        /* Utilities */
-        @keyframes spin { from { transform: rotateX(20deg) rotateZ(0deg); } to { transform: rotateX(20deg) rotateZ(360deg); } }
+        .text-glow { text-shadow: 0 0 20px rgba(255,255,255,0.3); }
         
-        /* Number Flip Animation */
-        .digit-flip { display: inline-block; animation: flipIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes flipIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* ⚡ The Button */
+        .btn-energy { position: relative; background: transparent; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: transform 0.2s; }
+        .btn-fill { position: absolute; top: 0; left: 0; bottom: 0; width: 0%; background: #fff; box-shadow: 0 0 30px white; transition: width 0.1s linear; mix-blend-mode: overlay; }
+
+        /* 💻 3. The Hacker Terminal */
+        #terminal-modal {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        }
+        .terminal-text {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+        .blink-cursor { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Intro Animation */
+        .fade-in { animation: fadeIn 2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen">
 
-    <div id="stage" class="stage w-full max-w-[375px] h-screen flex flex-col justify-between py-12 px-6">
+    <canvas id="neural-canvas"></canvas>
+    <div id="shockwave-effect" class="shockwave"></div>
+
+    <main id="main-ui" class="w-full max-w-[400px] h-[90vh] relative z-10 flex flex-col justify-between p-8 fade-in transition-all duration-500">
         
-        <header class="flex justify-between items-start opacity-50">
-            <div class="flex flex-col gap-1">
-                <span id="sys-status" class="text-[9px] font-mono tracking-[0.2em] text-cyan/60">OBSERVING</span>
-                <span class="text-[8px] font-mono text-white/20">ID_882</span>
-            </div>
-            </header>
+        <header class="flex justify-between items-end">
+            <div><div class="w-1 h-1 bg-white rounded-full mb-2 animate-pulse"></div><div class="text-[10px] font-display tracking-[0.3em] text-white/50">AETHER_CORE</div></div>
+            <div class="text-[10px] font-sans text-white/30">V.22.0</div>
+        </header>
 
         <div class="flex-1 flex flex-col items-center justify-center relative">
-            
-            <div id="reactor" class="reactor-container reactor-scene mb-12">
-                <div class="reactor-ring ring-outer"></div>
-                <div class="reactor-ring ring-inner"></div>
-                <div class="core-eye"></div>
+            <div class="relative w-40 h-40 mb-10 flex items-center justify-center animate-float">
+                <div class="absolute inset-0 rounded-full bg-white/5 blur-3xl opacity-50"></div>
+                <div class="absolute inset-0 border border-white/10 rounded-full scale-50"></div>
+                <div id="core-light" class="w-2 h-2 bg-white shadow-[0_0_20px_white] rounded-full transition-all duration-1000"></div>
             </div>
-
-            <div class="text-center">
-                <div class="font-sans text-4xl font-light tracking-tight text-white/90 drop-shadow-2xl">
-                    <span class="text-2xl text-cyan/40 align-top mr-1">$</span><span id="balance-display">0.00</span>
+            <div class="text-center mix-blend-screen">
+                <div class="text-[10px] font-display text-white/40 mb-4 tracking-[0.4em]">CURRENT_RESONANCE</div>
+                <div class="text-6xl font-light font-sans text-white text-glow tracking-tighter">
+                    <span class="text-4xl align-top opacity-50 font-thin">$</span><span id="balance">0.00</span>
                 </div>
             </div>
-
         </div>
 
-        <div class="flex flex-col gap-6 mb-8">
-            
-            <div class="h-4 flex items-center justify-center">
-                <p id="feedback" class="text-[9px] font-mono text-cyan/50 tracking-widest uppercase"></p>
+        <div class="space-y-6">
+            <div class="monolith rounded-2xl p-6 flex justify-between items-center">
+                <div><div class="text-[9px] font-sans text-white/40 uppercase tracking-widest mb-1">Assets Secured</div><div class="text-lg font-sans font-light">$5,000.00</div></div>
+                <div class="h-8 w-px bg-white/10"></div>
+                <div class="text-right"><div class="text-[9px] font-sans text-white/40 uppercase tracking-widest mb-1">Cycle Phase</div><div class="text-lg font-sans font-light">14<span class="text-sm opacity-30">/60</span></div></div>
             </div>
-
-            <button id="btn-main" onclick="Controller.handleInteraction()" class="btn-void w-full h-14 rounded-lg flex items-center justify-center group">
-                <span id="btn-text" class="text-[10px] font-mono tracking-[0.25em] uppercase">Initialize</span>
-            </button>
-
-            <div class="flex justify-between items-end text-white/10 px-2">
-                <div class="text-[9px] font-mono">ASSETS_LOCKED</div>
-                <div class="h-px flex-1 mx-4 bg-white/5"></div>
-                <div class="text-[9px] font-mono">CYCLE_14</div>
+            <div class="relative">
+                <button id="btn-hold" class="btn-energy w-full h-20 rounded-full flex items-center justify-center group cursor-pointer"
+                    onmousedown="Controller.startHold()" onmouseup="Controller.endHold()" onmouseleave="Controller.endHold()"
+                    ontouchstart="Controller.startHold()" ontouchend="Controller.endHold()">
+                    <div id="btn-fill" class="btn-fill"></div>
+                    <span id="btn-text" class="relative z-10 text-[10px] font-display tracking-[0.3em] text-white group-hover:tracking-[0.5em] transition-all duration-500">HOLD TO BREACH</span>
+                </button>
             </div>
         </div>
+    </main>
 
+    <div id="terminal-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[380px] h-[300px] rounded-xl p-6 z-50 hidden flex-col font-mono text-xs overflow-hidden">
+        <div class="flex items-center gap-2 mb-4 opacity-50">
+            <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <span class="tracking-widest">AETHER_LINK // BREACH_PROTOCOL</span>
+        </div>
+        <div id="terminal-screen" class="flex-1 overflow-y-auto flex flex-col justify-end">
+            <div id="terminal-content" class="terminal-text whitespace-pre-wrap leading-relaxed"></div>
+            <span class="blink-cursor">_</span>
+        </div>
     </div>
 
     <script>
-        // --- Mock Backend ---
-        const Core = {
-            db: { balance: 1240.50, lastClaim: localStorage.getItem('sentient_last'), isSunday: false },
-            async process(ms = 1500) { return new Promise(r => setTimeout(r, ms)); }, // Artificial latency
-            
-            getStatus() {
-                const now = new Date();
-                const last = this.db.lastClaim ? new Date(parseInt(this.db.lastClaim)) : null;
-                const claimed = last && last.toDateString() === now.toDateString();
-                
-                if (this.db.isSunday) return 'OFFLINE';
-                if (claimed) return 'STANDBY';
-                return 'IDLE';
-            },
+        // 1. PARTICLE SYSTEM (Modified for Explosion)
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [], attractionPoint = null;
 
-            execute() {
-                if (this.db.isSunday) return { ok: false, code: 'UNAVAILABLE' };
-                this.db.balance += 12.50;
-                this.db.lastClaim = Date.now();
-                localStorage.setItem('sentient_last', this.db.lastClaim);
-                return { ok: true, balance: this.db.balance, next: 86400 };
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 1.5; this.exploding = false;
             }
-        };
-
-        // --- UI Controller ---
-        const Controller = {
-            els: {
-                stage: document.getElementById('stage'),
-                reactor: document.getElementById('reactor'),
-                status: document.getElementById('sys-status'),
-                balance: document.getElementById('balance-display'),
-                btn: document.getElementById('btn-main'),
-                btnText: document.getElementById('btn-text'),
-                feedback: document.getElementById('feedback')
-            },
-
-            // Rule 1: Wake Up Sequence
-            async wakeUp() {
-                await Core.process(1000); // 1s Void
-                this.els.stage.classList.add('active'); // Slow fade in
-                
-                await Core.process(500);
-                this.render(Core.getStatus());
-            },
-
-            // Render State
-            render(state) {
-                const { reactor, status, btn, btnText, feedback } = this.els;
-                const balance = Core.db.balance.toFixed(2);
-                this.renderBalance(balance);
-
-                // Clear previous classes
-                reactor.classList.remove('processing', 'offline');
-                
-                switch(state) {
-                    case 'IDLE':
-                        status.innerText = "OBSERVING";
-                        btn.disabled = false;
-                        btnText.innerText = "INITIALIZE";
-                        btn.style.opacity = "1";
-                        break;
-                        
-                    case 'PROCESSING':
-                        status.innerText = "CALCULATING";
-                        reactor.classList.add('processing');
-                        btn.style.opacity = "0.3";
-                        feedback.innerText = "";
-                        break;
-
-                    case 'STANDBY': // Post-Claim
-                        status.innerText = "STANDBY";
-                        btn.disabled = true;
-                        btnText.innerText = "SYNCED";
-                        btn.style.borderColor = "transparent";
-                        btn.style.color = "rgba(255,255,255,0.1)";
-                        this.startTimer(86400); // Dummy timer
-                        break;
-
-                    case 'OFFLINE': // Rule 5: Quiet Error
-                        status.innerText = "DORMANT"; // Not "Error"
-                        status.style.color = "#555";
-                        reactor.classList.add('offline');
-                        btn.disabled = true;
-                        btnText.innerText = "UNAVAILABLE";
-                        btn.style.color = "#333";
-                        btn.style.borderColor = "#222";
-                        break;
-                }
-            },
-
-            // Rule 4: Delayed Interaction
-            async handleInteraction() {
-                // 1. Pause (Micro-latency)
-                this.els.btn.style.transform = "scale(0.98)";
-                await Core.process(300); // The "Thinking" pause
-                
-                // 2. Visual State Change
-                this.render('PROCESSING');
-                this.els.btnText.innerText = "AUTHENTICATING";
-
-                // 3. Execute
-                await Core.process(2000); // Slow processing
-                const res = Core.execute();
-
-                // 4. Resolve
-                if (res.ok) {
-                    this.renderBalance(res.balance.toFixed(2), true); // Animate numbers
-                    this.render('STANDBY');
+            update() {
+                if (this.exploding) {
+                    // Explosion physics: move away from center fast
+                    const dx = this.x - width/2; const dy = this.y - height/2;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    this.x += (dx/dist) * 15; this.y += (dy/dist) * 15;
+                } else if (attractionPoint) {
+                    // Attraction physics
+                    const dx = attractionPoint.x - this.x; const dy = attractionPoint.y - this.y;
+                    this.x += dx * 0.08; this.y += dy * 0.08;
                 } else {
-                    this.render('OFFLINE');
+                    // Normal floating
+                    this.x += this.vx; this.y += this.vy;
+                }
+                // Boundary wrap (only if not exploding)
+                if (!this.exploding) {
+                    if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+                    if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+                }
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.size * 0.25})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+            explode() { this.exploding = true; }
+        }
+        for (let i = 0; i < 180; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                if (!particles[i].exploding) {
+                    for (let j = i; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 100) {
+                            ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1000})`;
+                            ctx.lineWidth = 0.5; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                        }
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 2. HACKER CONTROLLER
+        const Controller = {
+            state: { holding: false, claimed: false },
+            hackLines: [
+                "> INITIALIZING AETHER BRIDGE...",
+                "> BYPASSING FIREWALL [GATE_0X99]",
+                "  [ ok ] TUNNEL ESTABLISHED",
+                "> INJECTING PAYLOAD: 0x4F 0x4B...",
+                "  Generating keys... ||||||||||",
+                "> DECRYPTING LIQUIDITY POOL",
+                "  Hash found: 4d9e8f7a6b...",
+                "> EXECUTING TRANSFER PROTOCOL...",
+                "  [ ok ] ASSETS SECURED",
+                "> BREACH SUCCESSFUL."
+            ],
+
+            els: {
+                btnFill: document.getElementById('btn-fill'),
+                btnText: document.getElementById('btn-text'),
+                balance: document.getElementById('balance'),
+                coreLight: document.getElementById('core-light'),
+                terminal: document.getElementById('terminal-modal'),
+                termContent: document.getElementById('terminal-content'),
+                mainUi: document.getElementById('main-ui'),
+                shockwave: document.getElementById('shockwave-effect')
+            },
+
+            startHold() {
+                if (this.state.claimed) return;
+                this.state.holding = true;
+                // Start attracting particles + Fill button
+                attractionPoint = { x: width/2, y: height/2 };
+                this.els.btnFill.style.width = '100%';
+                this.els.btnFill.style.transition = 'width 2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+
+                // Start Hacking Sequence after slight delay
+                setTimeout(() => { if(this.state.holding) this.runHackingSequence(); }, 500);
+            },
+
+            endHold() {
+                if (this.state.claimed) return;
+                this.state.holding = false;
+                // Reset interaction
+                attractionPoint = null;
+                this.els.btnFill.style.width = '0%';
+                this.els.btnFill.style.transition = 'width 0.5s ease-out';
+                this.els.terminal.classList.add('hidden'); // Hide terminal if interrupted
+                this.els.termContent.innerHTML = "";
+            },
+
+            async runHackingSequence() {
+                this.els.terminal.classList.remove('hidden');
+                this.els.mainUi.style.opacity = "0.3"; // Dim background UI
+                this.els.mainUi.style.transform = "scale(0.95)";
+
+                for (const line of this.hackLines) {
+                    if (!this.state.holding) return; // Stop if user lets go
+                    await this.typeLine(line);
+                    await this.delay(Math.random() * 200 + 50); // Random pause between lines
+                }
+                
+                if (this.state.holding) this.success();
+            },
+
+            async typeLine(line) {
+                const newLine = document.createElement('div');
+                this.els.termContent.appendChild(newLine);
+                for (let i = 0; i < line.length; i++) {
+                    newLine.textContent += line[i];
+                    this.els.termContent.parentElement.scrollTop = this.els.termContent.parentElement.scrollHeight; // Auto scroll
+                    await this.delay(30); // Typing speed
                 }
             },
 
-            renderBalance(amount, animate = false) {
-                const [int, dec] = amount.split('.');
-                // Simple render, can be upgraded to rolling numbers
-                this.els.balance.innerHTML = `${int}<span class="text-2xl text-white/30">.${dec}</span>`;
+            success() {
+                this.state.claimed = true;
+                this.state.holding = false;
+                
+                // 1. Hide Terminal & Restore UI
+                this.els.terminal.classList.add('hidden');
+                this.els.mainUi.style.opacity = "1";
+                this.els.mainUi.style.transform = "scale(1)";
+
+                // 2. THE EXPLOSION (Particles + Shockwave)
+                attractionPoint = null;
+                particles.forEach(p => p.explode()); // Send particles flying
+                this.els.shockwave.classList.add('active'); // Trigger shockwave ripple
+
+                // 3. Update UI
+                this.els.btnText.innerText = "BREACH COMPLETE";
+                this.animateNumber(1240.50, 1253.00);
+                
+                // Core Flash
+                this.els.coreLight.style.transform = "scale(50)";
+                this.els.coreLight.style.opacity = "0";
+                setTimeout(() => {
+                    this.els.coreLight.style.transition = "none";
+                    this.els.coreLight.style.transform = "scale(1)";
+                    this.els.coreLight.style.opacity = "1";
+                }, 500);
             },
 
-            startTimer(seconds) {
-                let s = seconds;
-                const tick = () => {
-                    s--;
-                    const h = Math.floor(s/3600).toString().padStart(2,'0');
-                    const m = Math.floor((s%3600)/60).toString().padStart(2,'0');
-                    this.els.feedback.innerText = `REBOOT T-${h}:${m}`;
-                };
-                tick();
-                setInterval(tick, 60000); // Update every minute to be calm
-            }
+            animateNumber(start, end) { /* Same as before */
+                let current = start;
+                const interval = setInterval(() => {
+                    current += 0.25;
+                    if (current >= end) { current = end; clearInterval(interval); }
+                    const [int, dec] = current.toFixed(2).split('.');
+                    this.els.balance.innerHTML = `${int}<span class="text-4xl align-top opacity-50 font-thin">.${dec}</span>`;
+                }, 16);
+            },
+            delay(ms) { return new Promise(r => setTimeout(r, ms)); }
         };
 
-        // Start the Entity
-        Controller.wakeUp();
-
-        // Dev: Toggle Sunday (Quiet Error Test)
-        // Core.db.isSunday = true; 
+        Controller.animateNumber(0, 1240.50);
     </script>
 </body>
 </html>
