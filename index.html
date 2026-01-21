@@ -1,191 +1,316 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Global Deposit Market</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Deposit AI: Sentient</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Manrope:wght@200;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#020408', 
+                        glass: 'rgba(255, 255, 255, 0.03)',
+                        cyan: { DEFAULT: '#00f3ff', dim: 'rgba(0, 243, 255, 0.1)' },
+                        amber: { DEFAULT: '#d97706', dim: 'rgba(217, 119, 6, 0.1)' }, // For "Quiet" Warnings
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'awaken': 'awaken 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'breathe-slow': 'breathe 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        awaken: {
+                            '0%': { opacity: '0', filter: 'blur(10px)' },
+                            '100%': { opacity: '1', filter: 'blur(0)' },
+                        },
+                        breathe: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.6' }, // Subtle change only
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #020408; color: #fff; overflow: hidden; }
 
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        bg: '#0B0F1A',
-        panel: '#11162A',
-        border: '#1F2642',
-        accent: '#3B82F6',
-        success: '#22C55E',
-        danger: '#EF4444',
-        muted: '#94A3B8',
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace']
-      }
-    }
-  }
-}
-</script>
+        /* 🌌 The Void Container */
+        .stage {
+            opacity: 0; /* Starts invisible (Rule 1) */
+            transition: opacity 2s ease-in-out;
+        }
+        .stage.active { opacity: 1; }
 
-<style>
-/* Smooth professional transitions */
-* {
-  transition: background-color .2s ease, color .2s ease, transform .2s ease;
-}
+        /* ⚛️ The Heavy Reactor (3D Perspective) */
+        .reactor-scene {
+            perspective: 800px; /* Strong Depth */
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* Button press realism */
-.btn-exec:active {
-  transform: scale(.98);
-}
+        .reactor-ring {
+            position: absolute;
+            border-radius: 50%;
+            transform-style: preserve-3d;
+        }
 
-/* Price blink on update */
-.price-flash {
-  animation: flash .6s ease;
-}
-@keyframes flash {
-  0% { color: #22C55E }
-  100% { color: white }
-}
-</style>
+        /* Outer Blocks - Heavy & Slow (Rule 2) */
+        .ring-outer {
+            width: 100%; height: 100%;
+            border: 2px dashed rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.05);
+            animation: spin 40s linear infinite; /* Very Slow */
+        }
+
+        /* Inner Structure - Reverse */
+        .ring-inner {
+            width: 70%; height: 70%;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            animation: spin 25s linear infinite reverse;
+        }
+
+        /* The Core "Eye" */
+        .core-eye {
+            width: 10px; height: 10px;
+            background: #00f3ff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00f3ff;
+            opacity: 0.5;
+            transition: all 0.5s ease-out;
+            animation: breathe 6s ease-in-out infinite; /* Rule 2 */
+        }
+
+        /* States for the Reactor */
+        .reactor-container.processing .ring-outer { animation-duration: 2s; border-color: #fff; opacity: 1; }
+        .reactor-container.processing .core-eye { box-shadow: 0 0 50px #fff; background: #fff; }
+        
+        /* Rule 5: Quiet Error State */
+        .reactor-container.offline .ring-outer { border-color: #333; animation: none; transform: rotate(45deg); }
+        .reactor-container.offline .core-eye { background: #333; box-shadow: none; }
+        .reactor-container.offline .ring-inner { border-color: #333; animation: none; }
+
+        /* 🔲 Minimal Button */
+        .btn-void {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.3);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); /* Slow transition */
+        }
+        .btn-void:hover {
+            border-color: rgba(0, 243, 255, 0.3);
+            color: rgba(0, 243, 255, 0.8);
+            letter-spacing: 0.3em; /* Subtle expansion */
+        }
+        .btn-void:active {
+            transform: scale(0.98);
+        }
+
+        /* Utilities */
+        @keyframes spin { from { transform: rotateX(20deg) rotateZ(0deg); } to { transform: rotateX(20deg) rotateZ(360deg); } }
+        
+        /* Number Flip Animation */
+        .digit-flip { display: inline-block; animation: flipIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes flipIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
 </head>
+<body class="flex flex-col items-center justify-center min-h-screen">
 
-<body class="bg-bg text-white min-h-screen flex justify-center">
+    <div id="stage" class="stage w-full max-w-[375px] h-screen flex flex-col justify-between py-12 px-6">
+        
+        <header class="flex justify-between items-start opacity-50">
+            <div class="flex flex-col gap-1">
+                <span id="sys-status" class="text-[9px] font-mono tracking-[0.2em] text-cyan/60">OBSERVING</span>
+                <span class="text-[8px] font-mono text-white/20">ID_882</span>
+            </div>
+            </header>
 
-<main class="w-full max-w-[420px] min-h-screen flex flex-col px-6 py-8">
+        <div class="flex-1 flex flex-col items-center justify-center relative">
+            
+            <div id="reactor" class="reactor-container reactor-scene mb-12">
+                <div class="reactor-ring ring-outer"></div>
+                <div class="reactor-ring ring-inner"></div>
+                <div class="core-eye"></div>
+            </div>
 
-<!-- HEADER -->
-<header class="flex justify-between items-center mb-8">
-  <div>
-    <h1 class="text-lg font-semibold tracking-tight">
-      Global Deposit Market
-    </h1>
-    <p class="text-xs text-muted">
-      Institutional Liquidity Interface
-    </p>
-  </div>
+            <div class="text-center">
+                <div class="font-sans text-4xl font-light tracking-tight text-white/90 drop-shadow-2xl">
+                    <span class="text-2xl text-cyan/40 align-top mr-1">$</span><span id="balance-display">0.00</span>
+                </div>
+            </div>
 
-  <div class="text-right">
-    <p class="text-xs text-muted">Market Status</p>
-    <p class="text-sm font-mono text-success">LIVE</p>
-  </div>
-</header>
+        </div>
 
-<!-- PRICE PANEL -->
-<section class="bg-panel border border-border rounded-xl p-6 mb-6">
-  <p class="text-xs uppercase tracking-widest text-muted mb-2">
-    Total Liquidity
-  </p>
-  <div class="flex items-end gap-2">
-    <span class="text-4xl font-light">$</span>
-    <span id="ui-balance" class="text-5xl font-medium">
-      0.00
-    </span>
-  </div>
-  <p class="text-xs text-muted mt-2 font-mono">
-    Updated in real-time
-  </p>
-</section>
+        <div class="flex flex-col gap-6 mb-8">
+            
+            <div class="h-4 flex items-center justify-center">
+                <p id="feedback" class="text-[9px] font-mono text-cyan/50 tracking-widest uppercase"></p>
+            </div>
 
-<!-- MARKET INFO -->
-<section class="grid grid-cols-2 gap-4 mb-8">
-  <div class="bg-panel border border-border rounded-lg p-4">
-    <p class="text-xs text-muted">Locked Assets</p>
-    <p class="font-mono mt-1">$5,000.00</p>
-  </div>
-  <div class="bg-panel border border-border rounded-lg p-4">
-    <p class="text-xs text-muted">Next Cycle</p>
-    <p class="font-mono mt-1">14 Days</p>
-  </div>
-</section>
+            <button id="btn-main" onclick="Controller.handleInteraction()" class="btn-void w-full h-14 rounded-lg flex items-center justify-center group">
+                <span id="btn-text" class="text-[10px] font-mono tracking-[0.25em] uppercase">Initialize</span>
+            </button>
 
-<!-- ACTION -->
-<section class="mt-auto">
-  <button id="btn-claim"
-    onclick="Controller.handleClaim()"
-    class="btn-exec w-full h-14 rounded-lg bg-accent hover:bg-blue-500 text-white font-semibold tracking-wide">
-    Execute Market Claim
-  </button>
+            <div class="flex justify-between items-end text-white/10 px-2">
+                <div class="text-[9px] font-mono">ASSETS_LOCKED</div>
+                <div class="h-px flex-1 mx-4 bg-white/5"></div>
+                <div class="text-[9px] font-mono">CYCLE_14</div>
+            </div>
+        </div>
 
-  <p id="feedback-text" class="text-center text-xs font-mono text-muted mt-4 h-4"></p>
-</section>
+    </div>
 
-<!-- FOOTER -->
-<footer class="mt-8 text-center text-[10px] text-muted font-mono">
-  Secure Execution · ISO Compliant · v2026.1
-</footer>
+    <script>
+        // --- Mock Backend ---
+        const Core = {
+            db: { balance: 1240.50, lastClaim: localStorage.getItem('sentient_last'), isSunday: false },
+            async process(ms = 1500) { return new Promise(r => setTimeout(r, ms)); }, // Artificial latency
+            
+            getStatus() {
+                const now = new Date();
+                const last = this.db.lastClaim ? new Date(parseInt(this.db.lastClaim)) : null;
+                const claimed = last && last.toDateString() === now.toDateString();
+                
+                if (this.db.isSunday) return 'OFFLINE';
+                if (claimed) return 'STANDBY';
+                return 'IDLE';
+            },
 
-</main>
+            execute() {
+                if (this.db.isSunday) return { ok: false, code: 'UNAVAILABLE' };
+                this.db.balance += 12.50;
+                this.db.lastClaim = Date.now();
+                localStorage.setItem('sentient_last', this.db.lastClaim);
+                return { ok: true, balance: this.db.balance, next: 86400 };
+            }
+        };
 
-<script>
-/* =========================
-   BUSINESS LOGIC (CLEAN)
-========================= */
+        // --- UI Controller ---
+        const Controller = {
+            els: {
+                stage: document.getElementById('stage'),
+                reactor: document.getElementById('reactor'),
+                status: document.getElementById('sys-status'),
+                balance: document.getElementById('balance-display'),
+                btn: document.getElementById('btn-main'),
+                btnText: document.getElementById('btn-text'),
+                feedback: document.getElementById('feedback')
+            },
 
-const MockServer = {
-  balance: 1240.50,
+            // Rule 1: Wake Up Sequence
+            async wakeUp() {
+                await Core.process(1000); // 1s Void
+                this.els.stage.classList.add('active'); // Slow fade in
+                
+                await Core.process(500);
+                this.render(Core.getStatus());
+            },
 
-  delay(ms){
-    return new Promise(r => setTimeout(r, ms))
-  },
+            // Render State
+            render(state) {
+                const { reactor, status, btn, btnText, feedback } = this.els;
+                const balance = Core.db.balance.toFixed(2);
+                this.renderBalance(balance);
 
-  async getStatus(){
-    await this.delay(400)
-    return this.balance
-  },
+                // Clear previous classes
+                reactor.classList.remove('processing', 'offline');
+                
+                switch(state) {
+                    case 'IDLE':
+                        status.innerText = "OBSERVING";
+                        btn.disabled = false;
+                        btnText.innerText = "INITIALIZE";
+                        btn.style.opacity = "1";
+                        break;
+                        
+                    case 'PROCESSING':
+                        status.innerText = "CALCULATING";
+                        reactor.classList.add('processing');
+                        btn.style.opacity = "0.3";
+                        feedback.innerText = "";
+                        break;
 
-  async claim(){
-    await this.delay(1000)
-    const old = this.balance
-    this.balance += 12.50
-    return { old, current: this.balance }
-  }
-}
+                    case 'STANDBY': // Post-Claim
+                        status.innerText = "STANDBY";
+                        btn.disabled = true;
+                        btnText.innerText = "SYNCED";
+                        btn.style.borderColor = "transparent";
+                        btn.style.color = "rgba(255,255,255,0.1)";
+                        this.startTimer(86400); // Dummy timer
+                        break;
 
-const Controller = {
-  ui: {
-    balance: document.getElementById('ui-balance'),
-    feedback: document.getElementById('feedback-text'),
-    btn: document.getElementById('btn-claim')
-  },
+                    case 'OFFLINE': // Rule 5: Quiet Error
+                        status.innerText = "DORMANT"; // Not "Error"
+                        status.style.color = "#555";
+                        reactor.classList.add('offline');
+                        btn.disabled = true;
+                        btnText.innerText = "UNAVAILABLE";
+                        btn.style.color = "#333";
+                        btn.style.borderColor = "#222";
+                        break;
+                }
+            },
 
-  async init(){
-    const balance = await MockServer.getStatus()
-    this.render(balance)
-  },
+            // Rule 4: Delayed Interaction
+            async handleInteraction() {
+                // 1. Pause (Micro-latency)
+                this.els.btn.style.transform = "scale(0.98)";
+                await Core.process(300); // The "Thinking" pause
+                
+                // 2. Visual State Change
+                this.render('PROCESSING');
+                this.els.btnText.innerText = "AUTHENTICATING";
 
-  render(value){
-    this.ui.balance.textContent = value.toFixed(2)
-  },
+                // 3. Execute
+                await Core.process(2000); // Slow processing
+                const res = Core.execute();
 
-  async handleClaim(){
-    this.ui.btn.disabled = true
-    this.ui.feedback.textContent = "Executing order…"
+                // 4. Resolve
+                if (res.ok) {
+                    this.renderBalance(res.balance.toFixed(2), true); // Animate numbers
+                    this.render('STANDBY');
+                } else {
+                    this.render('OFFLINE');
+                }
+            },
 
-    const res = await MockServer.claim()
-    this.animate(res.old, res.current)
+            renderBalance(amount, animate = false) {
+                const [int, dec] = amount.split('.');
+                // Simple render, can be upgraded to rolling numbers
+                this.els.balance.innerHTML = `${int}<span class="text-2xl text-white/30">.${dec}</span>`;
+            },
 
-    this.ui.feedback.textContent = "Execution completed successfully"
-    this.ui.btn.disabled = false
-  },
+            startTimer(seconds) {
+                let s = seconds;
+                const tick = () => {
+                    s--;
+                    const h = Math.floor(s/3600).toString().padStart(2,'0');
+                    const m = Math.floor((s%3600)/60).toString().padStart(2,'0');
+                    this.els.feedback.innerText = `REBOOT T-${h}:${m}`;
+                };
+                tick();
+                setInterval(tick, 60000); // Update every minute to be calm
+            }
+        };
 
-  animate(start, end){
-    let p = 0
-    const step = () => {
-      p += 0.05
-      const val = start + (end - start) * p
-      this.ui.balance.textContent = val.toFixed(2)
-      this.ui.balance.classList.add("price-flash")
-      if (p < 1) requestAnimationFrame(step)
-    }
-    step()
-  }
-}
+        // Start the Entity
+        Controller.wakeUp();
 
-Controller.init()
-</script>
-
+        // Dev: Toggle Sunday (Quiet Error Test)
+        // Core.db.isSunday = true; 
+    </script>
 </body>
 </html>
