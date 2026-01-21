@@ -2,195 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>3D Market Reactor 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Global Deposit Market</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        bg: '#0B0F1A',
+        panel: '#11162A',
+        border: '#1F2642',
+        accent: '#3B82F6',
+        success: '#22C55E',
+        danger: '#EF4444',
+        muted: '#94A3B8',
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace']
+      }
+    }
+  }
+}
+</script>
+
 <style>
-:root{
-  --bg:#020617;
-  --cyan:#00f6ff;
-  --purple:#a855f7;
-  --danger:#ff4d4d;
+/* Smooth professional transitions */
+* {
+  transition: background-color .2s ease, color .2s ease, transform .2s ease;
 }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:#fff;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:system-ui;
-  overflow:hidden;
+/* Button press realism */
+.btn-exec:active {
+  transform: scale(.98);
 }
 
-/* ===== 3D SCENE ===== */
-.scene{
-  perspective:1200px;
+/* Price blink on update */
+.price-flash {
+  animation: flash .6s ease;
 }
-
-.reactor{
-  position:relative;
-  width:220px;
-  height:220px;
-  transform-style:preserve-3d;
-}
-
-/* ===== BLOCKS ===== */
-.block{
-  position:absolute;
-  width:60px;
-  height:60px;
-  background:linear-gradient(135deg,rgba(0,246,255,.35),rgba(168,85,247,.35));
-  border:1px solid rgba(255,255,255,.15);
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 25px rgba(0,246,255,.25);
-  transform-style:preserve-3d;
-  animation:float 4s ease-in-out infinite;
-}
-
-.block::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at top,rgba(255,255,255,.35),transparent 70%);
-}
-
-/* positions */
-.b1{transform:translate3d(-80px,-40px,-120px)}
-.b2{transform:translate3d(60px,-60px,-60px)}
-.b3{transform:translate3d(-40px,70px,-30px)}
-.b4{transform:translate3d(80px,60px,-160px)}
-
-@keyframes float{
-  0%,100%{transform:translateZ(var(--z)) translateY(0)}
-  50%{transform:translateZ(calc(var(--z) + 40px)) translateY(-10px)}
-}
-
-/* ===== CORE ===== */
-.core{
-  position:absolute;
-  inset:50%;
-  width:80px;
-  height:80px;
-  margin:-40px;
-  border-radius:50%;
-  background:radial-gradient(circle,var(--cyan),transparent 70%);
-  filter:blur(12px);
-  animation:pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(.9);opacity:.6}
-  50%{transform:scale(1.1);opacity:1}
-}
-
-/* ===== UI ===== */
-.panel{
-  position:absolute;
-  bottom:-110px;
-  width:100%;
-  text-align:center;
-}
-
-button{
-  margin-top:14px;
-  width:100%;
-  padding:14px;
-  background:transparent;
-  border:1px solid rgba(0,246,255,.4);
-  color:#fff;
-  font-weight:600;
-  letter-spacing:.2em;
-  cursor:pointer;
-}
-
-button:hover{
-  box-shadow:0 0 25px rgba(0,246,255,.4);
-}
-
-/* STATES */
-.claiming .block{
-  animation-duration:1.2s;
-}
-.locked .block{
-  background:linear-gradient(135deg,rgba(255,77,77,.4),rgba(120,0,0,.4));
+@keyframes flash {
+  0% { color: #22C55E }
+  100% { color: white }
 }
 </style>
 </head>
 
-<body>
-<div class="scene">
-  <div id="reactor" class="reactor">
-    <div class="block b1" style="--z:-120px"></div>
-    <div class="block b2" style="--z:-80px"></div>
-    <div class="block b3" style="--z:-40px"></div>
-    <div class="block b4" style="--z:-160px"></div>
-    <div class="core"></div>
+<body class="bg-bg text-white min-h-screen flex justify-center">
 
-    <div class="panel">
-      <div class="text-xs opacity-60 tracking-widest">TOTAL LIQUIDITY</div>
-      <div class="text-4xl mt-1">$<span id="balance">0.00</span></div>
-      <button onclick="Controller.claim()">INITIALIZE CLAIM</button>
-      <div id="status" class="text-xs mt-2 opacity-70"></div>
-    </div>
+<main class="w-full max-w-[420px] min-h-screen flex flex-col px-6 py-8">
+
+<!-- HEADER -->
+<header class="flex justify-between items-center mb-8">
+  <div>
+    <h1 class="text-lg font-semibold tracking-tight">
+      Global Deposit Market
+    </h1>
+    <p class="text-xs text-muted">
+      Institutional Liquidity Interface
+    </p>
   </div>
-</div>
+
+  <div class="text-right">
+    <p class="text-xs text-muted">Market Status</p>
+    <p class="text-sm font-mono text-success">LIVE</p>
+  </div>
+</header>
+
+<!-- PRICE PANEL -->
+<section class="bg-panel border border-border rounded-xl p-6 mb-6">
+  <p class="text-xs uppercase tracking-widest text-muted mb-2">
+    Total Liquidity
+  </p>
+  <div class="flex items-end gap-2">
+    <span class="text-4xl font-light">$</span>
+    <span id="ui-balance" class="text-5xl font-medium">
+      0.00
+    </span>
+  </div>
+  <p class="text-xs text-muted mt-2 font-mono">
+    Updated in real-time
+  </p>
+</section>
+
+<!-- MARKET INFO -->
+<section class="grid grid-cols-2 gap-4 mb-8">
+  <div class="bg-panel border border-border rounded-lg p-4">
+    <p class="text-xs text-muted">Locked Assets</p>
+    <p class="font-mono mt-1">$5,000.00</p>
+  </div>
+  <div class="bg-panel border border-border rounded-lg p-4">
+    <p class="text-xs text-muted">Next Cycle</p>
+    <p class="font-mono mt-1">14 Days</p>
+  </div>
+</section>
+
+<!-- ACTION -->
+<section class="mt-auto">
+  <button id="btn-claim"
+    onclick="Controller.handleClaim()"
+    class="btn-exec w-full h-14 rounded-lg bg-accent hover:bg-blue-500 text-white font-semibold tracking-wide">
+    Execute Market Claim
+  </button>
+
+  <p id="feedback-text" class="text-center text-xs font-mono text-muted mt-4 h-4"></p>
+</section>
+
+<!-- FOOTER -->
+<footer class="mt-8 text-center text-[10px] text-muted font-mono">
+  Secure Execution · ISO Compliant · v2026.1
+</footer>
+
+</main>
 
 <script>
-/* ===== MOCK SERVER ===== */
-const Server={
-  balance:1240,
-  last:null,
+/* =========================
+   BUSINESS LOGIC (CLEAN)
+========================= */
+
+const MockServer = {
+  balance: 1240.50,
+
+  delay(ms){
+    return new Promise(r => setTimeout(r, ms))
+  },
+
+  async getStatus(){
+    await this.delay(400)
+    return this.balance
+  },
+
   async claim(){
-    await new Promise(r=>setTimeout(r,1200))
-    if(Math.random()<.25) return {state:"LOCKED"}
-    this.balance+=12.5
-    this.last=Date.now()
-    return {state:"CLAIMED",balance:this.balance}
+    await this.delay(1000)
+    const old = this.balance
+    this.balance += 12.50
+    return { old, current: this.balance }
   }
 }
 
-/* ===== CONTROLLER ===== */
-const Controller={
-  ui:{
-    reactor:document.getElementById("reactor"),
-    balance:document.getElementById("balance"),
-    status:document.getElementById("status")
+const Controller = {
+  ui: {
+    balance: document.getElementById('ui-balance'),
+    feedback: document.getElementById('feedback-text'),
+    btn: document.getElementById('btn-claim')
   },
-  async claim(){
-    this.ui.reactor.classList.add("claiming")
-    this.ui.status.innerText="PROCESSING..."
-    const res=await Server.claim()
-    this.ui.reactor.classList.remove("claiming")
 
-    if(res.state==="CLAIMED"){
-      this.animateBalance(res.balance)
-      this.ui.status.innerText="SEQUENCE COMPLETE"
-    }else{
-      this.ui.reactor.classList.add("locked")
-      this.ui.status.innerText="SYSTEM LOCKED"
-    }
+  async init(){
+    const balance = await MockServer.getStatus()
+    this.render(balance)
   },
-  animateBalance(val){
-    const start=parseFloat(this.ui.balance.innerText)
-    const dur=1000
-    let t0=null
-    const step=t=>{
-      if(!t0) t0=t
-      const p=Math.min((t-t0)/dur,1)
-      const v=start+(val-start)*p
-      this.ui.balance.innerText=v.toFixed(2)
-      if(p<1) requestAnimationFrame(step)
+
+  render(value){
+    this.ui.balance.textContent = value.toFixed(2)
+  },
+
+  async handleClaim(){
+    this.ui.btn.disabled = true
+    this.ui.feedback.textContent = "Executing order…"
+
+    const res = await MockServer.claim()
+    this.animate(res.old, res.current)
+
+    this.ui.feedback.textContent = "Execution completed successfully"
+    this.ui.btn.disabled = false
+  },
+
+  animate(start, end){
+    let p = 0
+    const step = () => {
+      p += 0.05
+      const val = start + (end - start) * p
+      this.ui.balance.textContent = val.toFixed(2)
+      this.ui.balance.classList.add("price-flash")
+      if (p < 1) requestAnimationFrame(step)
     }
-    requestAnimationFrame(step)
+    step()
   }
 }
 
-Controller.animateBalance(Server.balance)
+Controller.init()
 </script>
+
 </body>
 </html>
