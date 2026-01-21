@@ -1,424 +1,196 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Deposit AI 2026</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        bg: '#030712', // Absolute Void
-                        cyan: { DEFAULT: '#00f3ff', dim: 'rgba(0, 243, 255, 0.1)' },
-                        purple: { DEFAULT: '#bc13fe', dim: 'rgba(188, 19, 254, 0.1)' },
-                    },
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    boxShadow: {
-                        'reactor': '0 0 40px rgba(0, 243, 255, 0.2)',
-                        'reactor-core': '0 0 15px rgba(0, 243, 255, 0.8)',
-                    },
-                    animation: {
-                        'spin-slow': 'spin 10s linear infinite',
-                        'spin-reverse': 'spin 15s linear infinite reverse',
-                        'pulse-deep': 'pulseDeep 4s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        pulseDeep: {
-                            '0%, 100%': { transform: 'scale(1)', opacity: '1' },
-                            '50%': { transform: 'scale(0.95)', opacity: '0.7' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>3D Market Reactor 2026</title>
 
-    <style>
-        body { background-color: #030712; color: #fff; overflow-x: hidden; }
+<script src="https://cdn.tailwindcss.com"></script>
 
-        /* 🌌 The Reactor Core (Centerpiece) */
-        .reactor-container {
-            position: relative;
-            width: 160px;
-            height: 160px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1000px; /* 3D Depth */
-        }
+<style>
+:root{
+  --bg:#020617;
+  --cyan:#00f6ff;
+  --purple:#a855f7;
+  --danger:#ff4d4d;
+}
 
-        /* Ring 1: The "Blocks" Outer Ring */
-        .ring-outer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px dashed #00f3ff; /* The Blocks */
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
-            animation: spin 20s linear infinite;
-            opacity: 0.6;
-        }
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:system-ui;
+  overflow:hidden;
+}
 
-        /* Ring 2: The "Tech" Middle Ring (Reverse) */
-        .ring-middle {
-            position: absolute;
-            width: 85%;
-            height: 85%;
-            border-top: 2px solid #bc13fe;
-            border-bottom: 2px solid #bc13fe;
-            border-left: 2px solid transparent;
-            border-right: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 10s linear infinite reverse;
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
-        }
+/* ===== 3D SCENE ===== */
+.scene{
+  perspective:1200px;
+}
 
-        /* Ring 3: The "Deep" Inner Ring */
-        .ring-inner {
-            position: absolute;
-            width: 60%;
-            height: 60%;
-            border: 4px dotted rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            animation: spin 5s linear infinite;
-        }
+.reactor{
+  position:relative;
+  width:220px;
+  height:220px;
+  transform-style:preserve-3d;
+}
 
-        /* The Core Energy (Glow) */
-        .core-energy {
-            width: 40%;
-            height: 40%;
-            background: radial-gradient(circle, #00f3ff 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(10px);
-            animation: pulseDeep 3s ease-in-out infinite;
-        }
+/* ===== BLOCKS ===== */
+.block{
+  position:absolute;
+  width:60px;
+  height:60px;
+  background:linear-gradient(135deg,rgba(0,246,255,.35),rgba(168,85,247,.35));
+  border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 25px rgba(0,246,255,.25);
+  transform-style:preserve-3d;
+  animation:float 4s ease-in-out infinite;
+}
 
-        /* 🟦 Glass UI Elements */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
-        }
+.block::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at top,rgba(255,255,255,.35),transparent 70%);
+}
 
-        /* ⚡ Button: Cyber Press */
-        .btn-cyber {
-            background: transparent;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .btn-cyber::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s;
-        }
-        .btn-cyber:hover {
-            border-color: #00f3ff;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
-        }
-        .btn-cyber:hover::before { transform: translateX(100%); }
-        
-        .btn-active {
-            background: radial-gradient(circle at center, rgba(0, 243, 255, 0.2) 0%, transparent 100%);
-            border-color: #00f3ff;
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
-        }
+/* positions */
+.b1{transform:translate3d(-80px,-40px,-120px)}
+.b2{transform:translate3d(60px,-60px,-60px)}
+.b3{transform:translate3d(-40px,70px,-30px)}
+.b4{transform:translate3d(80px,60px,-160px)}
 
-        /* Utilities */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulseDeep { 
-            0%, 100% { transform: scale(0.9); opacity: 0.6; } 
-            50% { transform: scale(1.1); opacity: 1; } 
-        }
-        .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+@keyframes float{
+  0%,100%{transform:translateZ(var(--z)) translateY(0)}
+  50%{transform:translateZ(calc(var(--z) + 40px)) translateY(-10px)}
+}
+
+/* ===== CORE ===== */
+.core{
+  position:absolute;
+  inset:50%;
+  width:80px;
+  height:80px;
+  margin:-40px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--cyan),transparent 70%);
+  filter:blur(12px);
+  animation:pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(.9);opacity:.6}
+  50%{transform:scale(1.1);opacity:1}
+}
+
+/* ===== UI ===== */
+.panel{
+  position:absolute;
+  bottom:-110px;
+  width:100%;
+  text-align:center;
+}
+
+button{
+  margin-top:14px;
+  width:100%;
+  padding:14px;
+  background:transparent;
+  border:1px solid rgba(0,246,255,.4);
+  color:#fff;
+  font-weight:600;
+  letter-spacing:.2em;
+  cursor:pointer;
+}
+
+button:hover{
+  box-shadow:0 0 25px rgba(0,246,255,.4);
+}
+
+/* STATES */
+.claiming .block{
+  animation-duration:1.2s;
+}
+.locked .block{
+  background:linear-gradient(135deg,rgba(255,77,77,.4),rgba(120,0,0,.4));
+}
+</style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center font-sans selection:bg-cyan selection:text-black">
 
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-[100px] pointer-events-none"></div>
-    <div class="fixed bottom-0 right-0 w-[300px] h-[300px] bg-cyan-900/10 rounded-full blur-[80px] pointer-events-none"></div>
+<body>
+<div class="scene">
+  <div id="reactor" class="reactor">
+    <div class="block b1" style="--z:-120px"></div>
+    <div class="block b2" style="--z:-80px"></div>
+    <div class="block b3" style="--z:-40px"></div>
+    <div class="block b4" style="--z:-160px"></div>
+    <div class="core"></div>
 
-    <main class="w-full max-w-[375px] h-screen flex flex-col relative z-10 p-6 fade-in-up">
-        
-        <header class="flex justify-between items-center mb-10">
-            <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-cyan rounded-full animate-pulse box-shadow-reactor"></div>
-                <span class="text-[10px] tracking-[0.2em] font-mono text-cyan/80">SYSTEM_ONLINE</span>
-            </div>
-            <div class="text-[10px] font-mono text-white/30">V.17.0</div>
-        </header>
-
-        <div class="flex-1 flex flex-col items-center justify-center relative">
-            
-            <div class="reactor-container mb-8" id="ai-core">
-                <div class="ring-outer"></div> <div class="ring-middle"></div> <div class="ring-inner"></div> <div class="core-energy"></div> <div class="absolute z-10 text-center">
-                    <div id="core-status" class="text-[10px] font-bold tracking-widest text-white drop-shadow-md">READY</div>
-                    <div class="text-[8px] text-cyan/60 font-mono mt-1">AI SYNC</div>
-                </div>
-            </div>
-
-            <div class="text-center mb-12">
-                <div class="text-[10px] text-white/40 uppercase tracking-[0.3em] mb-2">Total Liquidity</div>
-                <div class="text-5xl font-light tracking-tighter text-white drop-shadow-lg font-sans">
-                    <span class="text-3xl align-top text-cyan opacity-80">$</span><span id="ui-balance">0.00</span>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-auto space-y-6">
-            
-            <button id="btn-claim" onclick="Controller.handleClaim()" class="btn-cyber w-full h-16 rounded-xl flex items-center justify-center gap-3 group">
-                <span id="btn-text" class="text-sm font-bold tracking-[0.2em] text-white uppercase group-hover:text-cyan transition-colors">
-                    Initialize Claim
-                </span>
-                
-                <div id="btn-loader" class="hidden">
-                    <svg class="animate-spin h-5 w-5 text-cyan" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </div>
-            </button>
-
-            <div class="h-4 flex items-center justify-center overflow-hidden">
-                <p id="feedback-text" class="text-[9px] font-mono text-cyan/70 tracking-widest"></p>
-            </div>
-
-            <div class="glass-panel rounded-xl p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 rounded bg-white/5 text-cyan">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    </div>
-                    <div>
-                        <div class="text-[8px] text-white/40 uppercase tracking-wider">Locked Assets</div>
-                        <div class="text-sm font-mono text-white">$5,000.00</div>
-                    </div>
-                </div>
-                <div class="relative w-10 h-10 flex items-center justify-center">
-                    <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                        <path class="text-white/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#fff" stroke-opacity="0.1" stroke-width="2"/>
-                        <path class="text-purple-500 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" stroke-dasharray="25, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                    <span class="absolute text-[8px] font-mono text-white/60">14d</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div id="modal-task" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="glass-panel w-[85%] max-w-[320px] p-6 rounded-2xl border border-cyan/30 shadow-reactor relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-cyan"></div>
-            <h3 class="text-lg font-bold text-white text-center mb-1">IDENTITY VERIFICATION</h3>
-            <p class="text-[9px] text-center text-cyan/60 font-mono mb-6">BLOCKCHAIN CONFIRMATION REQUIRED</p>
-            
-            <div class="h-24 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center mb-6 bg-white/5 animate-pulse">
-                <span class="text-2xl mb-2 opacity-80">📸</span>
-                <span class="text-[8px] tracking-[0.2em] uppercase">Upload Proof</span>
-            </div>
-            
-            <button onclick="Controller.submitTask()" class="w-full py-3 bg-cyan text-black font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors">
-                Authorize Transaction
-            </button>
-        </div>
+    <div class="panel">
+      <div class="text-xs opacity-60 tracking-widest">TOTAL LIQUIDITY</div>
+      <div class="text-4xl mt-1">$<span id="balance">0.00</span></div>
+      <button onclick="Controller.claim()">INITIALIZE CLAIM</button>
+      <div id="status" class="text-xs mt-2 opacity-70"></div>
     </div>
+  </div>
+</div>
 
-    <script>
-        // ---------------------------------------------------------
-        // 🧠 THE BRAIN (Logic from previous versions - Keep it robust)
-        // ---------------------------------------------------------
-        
-        const MockServer = {
-            db: { balance: 1240.50, lastClaim: localStorage.getItem('mock_last'), isSunday: false },
-            async delay(ms) { return new Promise(r => setTimeout(r, ms)); },
-            async getStatus() {
-                await this.delay(500);
-                const now = new Date();
-                const last = this.db.lastClaim ? new Date(parseInt(this.db.lastClaim)) : null;
-                const claimedToday = last && last.toDateString() === now.toDateString();
-                let state = this.db.isSunday ? "MARKET_CLOSED" : (claimedToday ? "CLAIMED" : "READY_TO_CLAIM");
-                return { ok: true, state: state, data: { balance: this.db.balance, next_cycle_in: 86400 } };
-            },
-            async claim() {
-                await this.delay(1200); // Slower for drama
-                if(this.db.isSunday) return { ok: false, state: "MARKET_CLOSED", data: {} };
-                if(Math.random() < 0.3) return { ok: false, state: "TASK_REQUIRED", data: {} };
-                const old = this.db.balance;
-                this.db.balance += 12.50;
-                this.db.lastClaim = Date.now();
-                localStorage.setItem('mock_last', this.db.lastClaim);
-                return { ok: true, state: "CLAIMED", data: { balance: this.db.balance, old_balance: old, next_cycle_in: 86400 } };
-            },
-            async submitTask() {
-                await this.delay(1000);
-                const old = this.db.balance;
-                this.db.balance += 12.50;
-                this.db.lastClaim = Date.now();
-                localStorage.setItem('mock_last', this.db.lastClaim);
-                return { ok: true, state: "CLAIMED", data: { balance: this.db.balance, old_balance: old, next_cycle_in: 86400 } };
-            }
-        };
+<script>
+/* ===== MOCK SERVER ===== */
+const Server={
+  balance:1240,
+  last:null,
+  async claim(){
+    await new Promise(r=>setTimeout(r,1200))
+    if(Math.random()<.25) return {state:"LOCKED"}
+    this.balance+=12.5
+    this.last=Date.now()
+    return {state:"CLAIMED",balance:this.balance}
+  }
+}
 
-        const Timer = {
-            interval: null,
-            start(seconds) {
-                if(this.interval) clearInterval(this.interval);
-                let remaining = seconds;
-                const update = () => {
-                    if (remaining <= 0) { clearInterval(this.interval); Controller.init(); return; }
-                    remaining--;
-                    const h = Math.floor(remaining / 3600).toString().padStart(2, '0');
-                    const m = Math.floor((remaining % 3600) / 60).toString().padStart(2, '0');
-                    const s = (remaining % 60).toString().padStart(2, '0');
-                    document.getElementById('feedback-text').innerHTML = `REBOOT IN ${h}:${m}:${s}`;
-                    document.getElementById('feedback-text').className = "text-[9px] font-mono text-cyan tracking-widest animate-pulse";
-                };
-                update();
-                this.interval = setInterval(update, 1000);
-            },
-            stop() { clearInterval(this.interval); }
-        };
+/* ===== CONTROLLER ===== */
+const Controller={
+  ui:{
+    reactor:document.getElementById("reactor"),
+    balance:document.getElementById("balance"),
+    status:document.getElementById("status")
+  },
+  async claim(){
+    this.ui.reactor.classList.add("claiming")
+    this.ui.status.innerText="PROCESSING..."
+    const res=await Server.claim()
+    this.ui.reactor.classList.remove("claiming")
 
-        const Controller = {
-            ui: {
-                balance: document.getElementById('ui-balance'),
-                btn: document.getElementById('btn-claim'),
-                btnText: document.getElementById('btn-text'),
-                loader: document.getElementById('btn-loader'),
-                core: document.getElementById('ai-core'),
-                coreStatus: document.getElementById('core-status'),
-                modal: document.getElementById('modal-task')
-            },
+    if(res.state==="CLAIMED"){
+      this.animateBalance(res.balance)
+      this.ui.status.innerText="SEQUENCE COMPLETE"
+    }else{
+      this.ui.reactor.classList.add("locked")
+      this.ui.status.innerText="SYSTEM LOCKED"
+    }
+  },
+  animateBalance(val){
+    const start=parseFloat(this.ui.balance.innerText)
+    const dur=1000
+    let t0=null
+    const step=t=>{
+      if(!t0) t0=t
+      const p=Math.min((t-t0)/dur,1)
+      const v=start+(val-start)*p
+      this.ui.balance.innerText=v.toFixed(2)
+      if(p<1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }
+}
 
-            async init() {
-                const res = await MockServer.getStatus();
-                this.render(res);
-            },
-
-            render(res, animate = false) {
-                // Number Animation
-                if (animate && res.data.old_balance !== undefined) {
-                    this.animateNumber(res.data.old_balance, res.data.balance);
-                } else {
-                    const parts = res.data.balance.toFixed(2).split('.');
-                    this.ui.balance.innerHTML = `${parts[0]}<span class="text-3xl text-white/30">.${parts[1]}</span>`;
-                }
-                
-                this.updateState(res.state, res.data);
-            },
-
-            updateState(state, data) {
-                const { btn, btnText, core, coreStatus } = this.ui;
-                Timer.stop();
-                document.getElementById('feedback-text').innerText = "";
-
-                // Reset Reactor
-                core.className = "reactor-container mb-8"; // Default
-
-                switch(state) {
-                    case 'READY_TO_CLAIM':
-                        btn.className = "btn-cyber w-full h-16 rounded-xl flex items-center justify-center gap-3 group";
-                        btn.disabled = false;
-                        btnText.innerText = "INITIALIZE CLAIM";
-                        btnText.className = "text-sm font-bold tracking-[0.2em] text-white uppercase group-hover:text-cyan transition-colors";
-                        coreStatus.innerText = "READY";
-                        coreStatus.className = "text-[10px] font-bold tracking-widest text-white drop-shadow-md";
-                        break;
-
-                    case 'CLAIMED':
-                        btn.className = "w-full h-16 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 cursor-not-allowed";
-                        btn.disabled = true;
-                        btnText.innerText = "SEQUENCE COMPLETE";
-                        btnText.className = "text-xs font-mono tracking-widest text-white/40";
-                        coreStatus.innerText = "PROCESSING";
-                        coreStatus.className = "text-[10px] font-bold tracking-widest text-cyan animate-pulse";
-                        Timer.start(data.next_cycle_in);
-                        break;
-                        
-                    case 'MARKET_CLOSED':
-                        btn.className = "w-full h-16 rounded-xl flex items-center justify-center bg-red-900/10 border border-red-500/20 cursor-not-allowed";
-                        btn.disabled = true;
-                        btnText.innerText = "SYSTEM LOCKED";
-                        btnText.className = "text-xs font-mono tracking-widest text-red-500";
-                        coreStatus.innerText = "LOCKED";
-                        coreStatus.className = "text-[10px] font-bold tracking-widest text-red-500";
-                        // Make reactor red
-                        document.querySelector('.ring-outer').style.borderColor = "#ef4444";
-                        break;
-                }
-            },
-
-            async handleClaim() {
-                this.ui.btnText.classList.add('hidden');
-                this.ui.loader.classList.remove('hidden');
-                
-                // Speed up reactor visuals
-                document.querySelector('.ring-outer').style.animationDuration = "2s";
-                document.querySelector('.ring-middle').style.animationDuration = "2s";
-                
-                const res = await MockServer.claim();
-                
-                this.ui.loader.classList.add('hidden');
-                this.ui.btnText.classList.remove('hidden');
-                
-                // Reset reactor speed
-                document.querySelector('.ring-outer').style.animationDuration = "20s";
-                document.querySelector('.ring-middle').style.animationDuration = "10s";
-
-                if (res.ok) {
-                    this.render(res, true);
-                    this.updateState(res.state, res.data);
-                } else if (res.state === 'TASK_REQUIRED') {
-                    this.ui.modal.classList.remove('hidden');
-                } else {
-                    this.updateState(res.state, res.data);
-                }
-            },
-
-            async submitTask() {
-                const btn = this.ui.modal.querySelector('button');
-                btn.innerText = "VERIFYING...";
-                const res = await MockServer.submitTask();
-                this.ui.modal.classList.add('hidden');
-                btn.innerText = "Authorize Transaction";
-                if(res.ok) {
-                    this.render(res, true);
-                    this.updateState(res.state, res.data);
-                }
-            },
-
-            animateNumber(start, end) {
-                let startTimestamp = null;
-                const duration = 1500;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const ease = 1 - Math.pow(1 - progress, 4);
-                    const current = start + (end - start) * ease;
-                    const parts = current.toFixed(2).split('.');
-                    this.ui.balance.innerHTML = `${parts[0]}<span class="text-3xl text-white/30">.${parts[1]}</span>`;
-                    if (progress < 1) window.requestAnimationFrame(step);
-                };
-                window.requestAnimationFrame(step);
-            }
-        };
-
-        Controller.init();
-    </script>
+Controller.animateBalance(Server.balance)
+</script>
 </body>
 </html>
