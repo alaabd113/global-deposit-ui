@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Deposit | Royal Dashboard</title>
+    <title>Global Deposit | System Architect Edition</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&family=Playfair+Display:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -14,25 +14,40 @@
             theme: {
                 extend: {
                     colors: {
-                        bg: '#0B0C10',       /* أسود عميق */
-                        panel: '#13151b',    /* لون البطاقات */
-                        gold: '#C5A059',     /* الذهبي الفاخر */
+                        bg: '#050505',
+                        panel: '#0E0E0E',
+                        gold: '#C5A059',
                         goldDim: 'rgba(197, 160, 89, 0.1)',
-                        txt: '#E5E5E5',
-                        muted: '#6c7a89',
-                        green: '#27ae60',
-                        red: '#c0392b'
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        txt: { main: '#E5E5E5', muted: '#525252' },
+                        system: { green: '#10B981', red: '#EF4444' }
                     },
                     fontFamily: {
                         cairo: ['Cairo', 'sans-serif'],
                         playfair: ['Playfair Display', 'serif'],
-                    },
-                    boxShadow: {
-                        'glow': '0 0 30px rgba(197, 160, 89, 0.1)',
-                        'btn': '0 4px 15px rgba(0,0,0,0.5)',
+                        tech: ['Rajdhani', 'sans-serif'],
                     },
                     animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'pulse-slow': 'pulse 6s ease-in-out infinite',
+                        'sheen': 'sheen 12s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+                        'heartbeat': 'coreGlow 5s ease-in-out infinite',
+                        'deep-breath': 'deepBreath 4s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        coreGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(197,160,89,0.1)', borderColor: 'rgba(197,160,89,0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(197,160,89,0.25)', borderColor: 'rgba(197,160,89,0.5)' }
+                        },
+                        sheen: {
+                            '0%, 85%': { backgroundPosition: '200% 0', opacity: '0' },
+                            '90%': { opacity: '0.1' },
+                            '100%': { backgroundPosition: '-200% 0', opacity: '0' }
+                        },
+                        deepBreath: {
+                            '0%': { boxShadow: '0 0 20px rgba(197,160,89,0.1)' },
+                            '50%': { boxShadow: '0 0 80px rgba(197,160,89,0.6)', borderColor: 'rgba(197,160,89,0.9)' },
+                            '100%': { boxShadow: '0 0 20px rgba(197,160,89,0.1)' }
+                        }
                     }
                 }
             }
@@ -40,329 +55,452 @@
     </script>
 
     <style>
-        body { background-color: #0B0C10; color: #E5E5E5; font-family: 'Cairo', sans-serif; overflow: hidden; transition: filter 1s ease; }
-
-        /* ❄️ حالة التجميد (يوم الأحد) */
-        body.sunday-mode { filter: grayscale(100%) brightness(0.6); pointer-events: none; }
-        body.sunday-mode .status-badge { background: #333; color: #888; border-color: #555; }
-        body.sunday-mode .logo-ring { animation: none; border-color: #444; }
-
-        /* ✨ النصوص الذهبية */
-        .gold-text {
-            background: linear-gradient(180deg, #F3E5AB 10%, #C5A059 60%, #8A6E30 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.3));
-        }
-
-        /* 🔲 البطاقات الزجاجية */
-        .glass-card {
-            background: linear-gradient(145deg, #16181f 0%, #0f1013 100%);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* 🐴 الشعار الحي */
-        .logo-container { position: relative; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; }
-        .logo-ring {
-            position: absolute; width: 100%; height: 100%; border: 2px solid rgba(197, 160, 89, 0.5); border-radius: 50%;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.1); animation: spin-slow 15s linear infinite;
-        }
-        .logo-ring::after {
-            content: ''; position: absolute; top: -2px; left: 50%; width: 10px; height: 10px; background: #C5A059; border-radius: 50%;
-            box-shadow: 0 0 15px #C5A059;
-        }
-        @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* 🎛️ الأزرار التفاعلية */
-        .action-btn {
-            background: #1A1D26; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        body { background-color: #050505; color: #E5E5E5; font-family: 'Cairo', sans-serif; overflow: hidden; user-select: none; }
+        
+        /* State Styles managed by JS injection mostly, but keeping base classes */
+        body.state-frozen { filter: grayscale(100%) brightness(0.4); pointer-events: none; }
+        
+        /* Pulse Card */
+        .pulse-card {
             position: relative; overflow: hidden;
+            background: linear-gradient(145deg, #111, #0a0a0a);
+            border: 1px solid var(--border);
+            border-radius: 20px;
         }
-        .action-btn::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%); opacity: 0; transition: 0.3s;
+        .pulse-card::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 200%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent);
+            transform: skewX(-20deg); pointer-events: none;
+            animation: sheen 15s infinite;
         }
-        .action-btn:hover { transform: translateY(-3px); border-color: #C5A059; box-shadow: 0 5px 20px rgba(197, 160, 89, 0.15); }
-        .action-btn:hover::before { opacity: 1; }
-        .action-btn:active { transform: scale(0.98); }
 
-        /* زر المطالبة الرئيسي */
-        .hero-btn { background: linear-gradient(135deg, #C5A059 0%, #8A6E30 100%); border: none; }
-        .hero-btn * { color: #000 !important; }
-        .hero-btn:hover { filter: brightness(1.2); box-shadow: 0 0 30px rgba(197, 160, 89, 0.4); }
-
-        /* التنبيهات */
-        .toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            background: #16181f; border: 1px solid #C5A059; color: #C5A059;
-            padding: 12px 30px; border-radius: 50px; z-index: 100; opacity: 0;
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-weight: bold;
+        /* Core Heartbeat */
+        .logo-ring {
+            position: absolute; width: 100%; height: 100%; 
+            border: 2px solid rgba(197, 160, 89, 0.3); border-radius: 50%;
+            animation: coreGlow 5s ease-in-out infinite;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .deep-breath-effect { animation: deep-breath 4s ease-in-out forwards !important; }
+
+        /* Button Base */
+        .hero-btn {
+            background: linear-gradient(135deg, #C5A059 0%, #8A6E30 100%);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: none; position: relative; overflow: hidden;
+        }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(197, 160, 89, 0.4); filter: brightness(1.1); }
+        .hero-btn:active { transform: scale(0.98); }
+        .icon-rotate { transform: rotate(90deg); transition: transform 0.5s ease; }
+
+        /* Market Zone */
+        .market-zone { opacity: 0.6; transition: all 0.8s ease; filter: grayscale(100%); }
+        .market-zone:hover { opacity: 1; filter: grayscale(0%); }
+        .market-flash { animation: flashMarket 1s ease-out forwards; }
+        @keyframes flashMarket {
+            0% { opacity: 0.6; filter: grayscale(100%) brightness(1); }
+            50% { opacity: 1; filter: grayscale(0%) brightness(1.5); box-shadow: 0 0 50px rgba(197,160,89,0.1); }
+            100% { opacity: 0.6; filter: grayscale(100%) brightness(1); }
+        }
+
+        /* Sidebar & Subs */
+        .sidebar-link { border-right: 3px solid transparent; transition: 0.3s; opacity: 0.6; }
+        .sidebar-link.active, .sidebar-link:hover { opacity: 1; border-color: #C5A059; background: linear-gradient(90deg, rgba(197,160,89,0.1), transparent); }
+        .sub-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .sub-btn:hover { border-color: #C5A059; color: #C5A059; }
+        
+        /* Glass Elements */
+        .glass-pill { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
 <body class="flex h-screen">
 
-    <aside class="w-20 lg:w-64 bg-[#0e0f14] border-l border-white/5 flex flex-col z-20 shadow-2xl">
-        <div class="h-24 flex items-center justify-center border-b border-white/5">
-            <i class="fas fa-shield-alt text-3xl text-gold"></i>
+    <aside class="w-20 lg:w-64 bg-panel border-l border-white/5 flex flex-col z-20 shadow-2xl">
+        <div class="h-20 flex items-center justify-center border-b border-white/5">
+            <i class="fas fa-shield-alt text-3xl text-gold opacity-90"></i>
         </div>
-        <nav class="flex-1 py-8 space-y-2">
-            <a href="#" class="flex items-center px-6 py-4 text-white bg-goldDim border-r-4 border-gold">
+        <nav class="flex-1 py-8 space-y-1">
+            <a href="#" class="sidebar-link active flex items-center px-6 py-4 text-white">
                 <i class="fas fa-th-large text-xl w-8 text-center text-gold"></i>
-                <span class="hidden lg:block mr-2 font-bold">لوحة التحكم</span>
+                <span class="hidden lg:block mr-2 font-bold text-sm">الرئيسية</span>
             </a>
-            <a href="#" class="flex items-center px-6 py-4 text-muted hover:text-gold hover:bg-white/5 transition-all">
-                <i class="fas fa-layer-group text-xl w-8 text-center"></i>
-                <span class="hidden lg:block mr-2 font-bold">الترقيات</span>
+            <a href="#" class="sidebar-link flex items-center px-6 py-4 text-white">
+                <i class="fas fa-wallet text-xl w-8 text-center"></i>
+                <span class="hidden lg:block mr-2 text-sm">المحفظة</span>
             </a>
-            <a href="#" class="flex items-center px-6 py-4 text-muted hover:text-gold hover:bg-white/5 transition-all">
+            <a href="#" class="sidebar-link flex items-center px-6 py-4 text-white">
                 <i class="fas fa-users text-xl w-8 text-center"></i>
-                <span class="hidden lg:block mr-2 font-bold">الفريق</span>
+                <span class="hidden lg:block mr-2 text-sm">الفريق</span>
             </a>
         </nav>
     </aside>
 
-    <main class="flex-1 flex flex-col relative bg-bg">
+    <main class="flex-1 flex flex-col relative bg-bg overflow-hidden p-6 gap-6">
         
-        <div class="h-[30%] flex flex-col items-center justify-center relative z-10">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(197,160,89,0.08)_0%,transparent_70%)] pointer-events-none"></div>
-
-            <div class="flex items-center gap-6">
-                <div class="logo-container">
-                    <div class="logo-ring"></div>
-                    <i class="fas fa-globe-americas text-5xl text-gold drop-shadow-[0_0_15px_rgba(197,160,89,0.8)] relative z-10"></i>
+        <div class="flex items-center justify-center relative h-[15%]">
+            <div class="flex items-center gap-4">
+                <div class="relative w-16 h-16 flex items-center justify-center">
+                    <div id="core-ring" class="logo-ring"></div>
+                    <i class="fas fa-globe-americas text-3xl text-gold drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] relative z-10"></i>
                 </div>
-                
                 <div class="text-right">
-                    <h1 class="text-4xl lg:text-5xl font-extrabold uppercase tracking-widest gold-text font-playfair mb-1">
-                        GLOBAL DEPOSIT
-                    </h1>
-                    <div class="flex items-center gap-2">
-                        <span id="system-badge" class="px-2 py-0.5 rounded border border-green-500/30 bg-green-500/10 text-[10px] text-green-400 font-bold tracking-wider status-badge">
-                            SYSTEM ACTIVE
-                        </span>
-                        <span class="text-xs text-muted tracking-[0.3em] uppercase">Elite Career System</span>
+                    <h1 class="text-2xl font-bold tracking-widest text-white font-playfair">GLOBAL DEPOSIT</h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span id="sys-dot" class="w-1.5 h-1.5 rounded-full bg-system-green animate-pulse"></span>
+                        <span id="sys-status" class="text-[10px] text-gray-400 uppercase tracking-widest font-tech">INITIALIZING...</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="h-[70%] px-6 pb-6 grid grid-cols-12 gap-6 overflow-y-auto">
-            
-            <div class="col-span-12 lg:col-span-5 flex flex-col gap-5">
+        <div class="flex-1 flex flex-col items-center justify-center gap-6 h-[40%]">
+            <div class="w-full max-w-lg flex flex-col gap-5">
                 
-                <div class="glass-card p-6 flex justify-between items-center relative group">
+                <div class="pulse-card p-6 flex justify-between items-center relative">
+                    <div class="absolute right-0 top-0 p-4 opacity-5 text-6xl text-gold"><i class="fas fa-wallet"></i></div>
                     <div>
-                        <p class="text-xs text-muted mb-1 font-bold tracking-wide">الرصيد المتاح للسحب</p>
-                        <h2 class="text-4xl font-bold text-white flex items-baseline">
-                            $ <span id="balance-display">1,240</span><span class="text-xl text-gold opacity-70">.50</span>
+                        <p class="text-xs text-gray-400 mb-1 tracking-wider uppercase font-bold">Available Balance</p>
+                        <h2 class="text-5xl font-bold text-white font-[Cairo] tracking-tight">
+                            <span class="text-2xl text-gold align-top">$</span><span id="balance-display">---</span><span class="text-xl text-gray-500">.00</span>
                         </h2>
                     </div>
-                    <div class="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center text-gold shadow-glow">
-                        <i class="fas fa-wallet text-xl"></i>
-                    </div>
                 </div>
 
-                <div class="glass-card p-5 grid grid-cols-2 gap-4 h-full">
-                    
-                    <button id="btn-claim" onclick="Controller.handleClaim()" class="action-btn hero-btn col-span-2 py-6 flex flex-row items-center justify-center gap-4 group">
-                        <div class="w-10 h-10 bg-black/10 rounded-full flex items-center justify-center">
-                            <i class="fas fa-hand-holding-dollar text-xl group-hover:scale-110 transition-transform"></i>
-                        </div>
-                        <div class="text-right">
-                            <span id="btn-title" class="block font-bold text-lg">استلام الراتب</span>
-                            <span id="btn-subtitle" class="block text-[10px] opacity-70 font-bold tracking-wider">CLAIM REWARD</span>
-                        </div>
-                        <div id="loader" class="hidden absolute right-6">
-                            <i class="fas fa-circle-notch fa-spin text-xl"></i>
-                        </div>
-                    </button>
-
-                    <button class="action-btn p-4 flex flex-col items-center justify-center gap-2">
-                        <i class="fas fa-file-contract text-gold text-xl"></i>
-                        <span class="text-xs text-muted font-bold">العقود</span>
-                    </button>
-
-                    <button class="action-btn p-4 flex flex-col items-center justify-center gap-2">
-                        <i class="fas fa-users text-gold text-xl"></i>
-                        <span class="text-xs text-muted font-bold">الفريق</span>
-                    </button>
-
-                    <button class="action-btn p-4 flex flex-col items-center justify-center gap-2 col-span-2">
-                        <i class="fas fa-shield-alt text-gold text-xl"></i>
-                        <span class="text-xs text-muted font-bold">سجل الحماية (Shield)</span>
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="col-span-12 lg:col-span-7 h-[400px] lg:h-auto">
-                <div class="glass-card w-full h-full p-1 border-gold/10 relative">
-                    <div class="absolute inset-0 bg-[#13151b] z-0 flex items-center justify-center text-muted text-xs">
-                        جاري تحميل بيانات السوق...
+                <button id="btn-claim" class="hero-btn w-full py-5 rounded-xl flex items-center justify-center gap-3 shadow-glow group opacity-50 cursor-not-allowed">
+                    <div class="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center transition-transform duration-500" id="btn-icon-container">
+                        <i id="btn-icon" class="fas fa-fingerprint text-xl text-black"></i>
                     </div>
-                    
-                    <div class="tradingview-widget-container relative z-10" style="height:100%;width:100%">
-                        <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-                        {
-                        "symbols": [
-                        [
-                            "BINANCE:BTCUSDT|1D"
-                        ]
-                        ],
-                        "chartOnly": false,
-                        "width": "100%",
-                        "height": "100%",
-                        "locale": "ar_AE",
-                        "colorTheme": "dark",
-                        "autosize": true,
-                        "showVolume": false,
-                        "showMA": false,
-                        "hideDateRanges": false,
-                        "hideMarketStatus": false,
-                        "hideSymbolLogo": false,
-                        "scalePosition": "left",
-                        "scaleMode": "Normal",
-                        "fontFamily": "Cairo, sans-serif",
-                        "fontSize": "10",
-                        "noTimeScale": false,
-                        "valuesTracking": "1",
-                        "changeMode": "price-and-percent",
-                        "chartType": "area",
-                        "maLineColor": "#2962FF",
-                        "maLineWidth": 1,
-                        "maLength": 9,
-                        "backgroundColor": "rgba(19, 21, 27, 1)",
-                        "lineWidth": 2,
-                        "lineType": 0,
-                        "dateRanges": [
-                        "1d|1",
-                        "1m|30",
-                        "3m|60",
-                        "12m|1D",
-                        "60m|1W",
-                        "all|1M"
-                        ]
-                        }
-                        </script>
+                    <div class="text-right">
+                        <span id="btn-text" class="block text-black font-extrabold text-lg transition-all">CONNECTING...</span>
+                        <span id="btn-sub" class="block text-black/60 text-[10px] font-bold tracking-widest">WAITING FOR SERVER</span>
                     </div>
+                </button>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="sub-btn p-3 rounded-lg flex flex-col items-center gap-1">
+                        <i class="fas fa-file-contract text-lg"></i>
+                        <span class="text-[10px] font-bold">العقود</span>
+                    </button>
+                    <button class="sub-btn p-3 rounded-lg flex flex-col items-center gap-1">
+                        <i class="fas fa-shield-alt text-lg"></i>
+                        <span class="text-[10px] font-bold">الحماية</span>
+                    </button>
+                    <button class="sub-btn p-3 rounded-lg flex flex-col items-center gap-1">
+                        <i class="fas fa-history text-lg"></i>
+                        <span class="text-[10px] font-bold">السجل</span>
+                    </button>
                 </div>
             </div>
-
         </div>
 
-        <div id="toast" class="toast">
-            <i class="fas fa-check-circle ml-2"></i>
-            <span id="toast-msg">تمت العملية بنجاح</span>
+        <div id="market-section" class="col-span-12 lg:col-span-8 h-[45%] mt-auto relative group market-zone">
+            <div class="absolute top-0 left-0 z-20 w-full flex justify-between items-start px-4 pt-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-system-green rounded-full animate-pulse shadow-[0_0_10px_#10B981]"></span>
+                        <span class="text-[10px] font-bold text-gold tracking-widest uppercase font-tech">Global Market Pulse</span>
+                    </div>
+                    <h3 class="text-white font-tech text-lg font-bold tracking-tighter">BTC/USDT</h3>
+                </div>
+                <div class="glass-pill flex items-center gap-4 px-4 py-1.5 rounded-full border border-white/5 bg-black/40 backdrop-blur-md">
+                    <div class="text-right">
+                        <p class="text-[8px] text-gray-500 uppercase">24h Volatility</p>
+                        <p class="text-xs text-green-400 font-mono">+2.45% ▲</p>
+                    </div>
+                    <div class="h-6 w-px bg-white/10"></div>
+                    <div class="text-right">
+                        <p class="text-[8px] text-gray-500 uppercase">Liquidity</p>
+                        <p class="text-xs text-gold font-mono">HIGH</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full h-full relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-b from-transparent to-[#0a0a0a]">
+                <div class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+                <div class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#050505] via-transparent to-[#050505] opacity-50"></div>
+                <div class="tradingview-widget-container" style="height:115%;width:100%; margin-top: -15px;">
+                    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+                    {
+                    "symbol": "BINANCE:BTCUSDT",
+                    "width": "100%",
+                    "height": "100%",
+                    "locale": "en",
+                    "dateRange": "12M",
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "autosize": true,
+                    "largeChartUrl": "",
+                    "chartOnly": true,
+                    "noTimeScale": false,
+                    "chartType": "area",
+                    "lineColor": "#C5A059",
+                    "bottomColor": "rgba(197, 160, 89, 0)",
+                    "topColor": "rgba(197, 160, 89, 0.2)"
+                    }
+                    </script>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <div class="fixed bottom-4 left-4 opacity-20 hover:opacity-100 transition-opacity z-50">
-        <button onclick="Server.toggleSunday()" class="bg-red-900 text-white text-[10px] px-3 py-1 rounded">Sunday Mode</button>
+    <div class="fixed bottom-4 left-4 opacity-10 hover:opacity-100 transition-opacity z-50 flex gap-2">
+        <button onclick="MockDB.adminToggleSunday()" class="bg-red-900 text-white text-[9px] px-3 py-1 rounded">Dev: Toggle Sunday</button>
+        <button onclick="MockDB.adminResetClaim()" class="bg-blue-900 text-white text-[9px] px-3 py-1 rounded">Dev: Reset Claim</button>
     </div>
 
     <script>
-        // 1. محاكاة السيرفر (Backend Mock)
-        const Server = {
-            data: {
-                balance: 1240.50,
-                isSunday: false,
-                claimedToday: false
+        // 1. CONSTANTS & ENUMS
+        const SYSTEM_STATES = {
+            LOADING: 'LOADING',
+            ACTIVE: 'ACTIVE',
+            FROZEN: 'FROZEN', // Sunday Mode
+            CLAIMED: 'CLAIMED'
+        };
+
+        // 2. MOCK DATABASE (LocalStorage) - Simulates a real Persistent DB
+        const MockDB = {
+            key: 'gd_user_data_v1',
+            
+            get() {
+                const stored = localStorage.getItem(this.key);
+                if (stored) return JSON.parse(stored);
+                // Initial DB State
+                return {
+                    balance: 1240.50,
+                    lastClaimDate: null,
+                    isSundayOverride: false // For Dev Testing
+                };
             },
             
-            toggleSunday() {
-                this.data.isSunday = !this.data.isSunday;
-                Controller.updateUIState();
+            save(data) {
+                localStorage.setItem(this.key, JSON.stringify(data));
+            },
+
+            // Admin Tools
+            adminToggleSunday() {
+                const db = this.get();
+                db.isSundayOverride = !db.isSundayOverride;
+                this.save(db);
+                Controller.init(); // Reboot system
+            },
+            adminResetClaim() {
+                const db = this.get();
+                db.lastClaimDate = null;
+                this.save(db);
+                Controller.init(); // Reboot system
             }
         };
 
-        // 2. متحكم الواجهة (UI Controller)
-        const Controller = {
-            els: {
-                balance: document.getElementById('balance-display'),
-                btn: document.getElementById('btn-claim'),
-                btnTitle: document.getElementById('btn-title'),
-                loader: document.getElementById('loader'),
-                badge: document.getElementById('system-badge'),
-                toast: document.getElementById('toast'),
-                body: document.body
-            },
+        // 3. SERVER API SIMULATION (The Authority)
+        const MockAPI = {
+            async getStatus() {
+                // Simulate Network Latency
+                await new Promise(r => setTimeout(r, 800));
+                
+                const db = MockDB.get();
+                const now = new Date();
+                
+                // Sunday Check Logic
+                const isSunday = db.isSundayOverride || now.getDay() === 0; // 0 is Sunday
+                
+                // Claim Check Logic (Idempotency)
+                const lastClaim = db.lastClaimDate ? new Date(db.lastClaimDate) : null;
+                const isClaimedToday = lastClaim && 
+                                       lastClaim.getDate() === now.getDate() && 
+                                       lastClaim.getMonth() === now.getMonth();
 
-            // تنفيذ المطالبة
-            handleClaim() {
-                if (Server.data.isSunday || Server.data.claimedToday) return;
-
-                const { btn, btnTitle, loader } = this.els;
-
-                // حالة التحميل
-                btnTitle.innerText = "جاري المعالجة...";
-                loader.classList.remove('hidden');
-                btn.classList.add('pointer-events-none', 'opacity-80');
-
-                // محاكاة تأخير السيرفر (1.5 ثانية)
-                setTimeout(() => {
-                    // النجاح
-                    Server.data.balance += 12.50;
-                    Server.data.claimedToday = true;
-                    
-                    this.updateBalance(Server.data.balance - 12.50, Server.data.balance);
-                    this.showToast("تم إضافة الراتب بنجاح");
-                    
-                    // تغيير حالة الزر
-                    loader.classList.add('hidden');
-                    btnTitle.innerText = "تم الاستلام";
-                    btn.classList.remove('hero-btn');
-                    btn.classList.add('bg-[#1A1D26]', 'border-green-500/50', 'text-green-500');
-                    btn.querySelector('i').classList.replace('fa-hand-holding-dollar', 'fa-check');
-                    btn.querySelector('i').classList.add('text-green-500');
-                    
-                }, 1500);
-            },
-
-            // تحديث حالة النظام (الأحد)
-            updateUIState() {
-                const { body, badge, btn } = this.els;
-                if (Server.data.isSunday) {
-                    body.classList.add('sunday-mode');
-                    badge.innerText = "SYSTEM FROZEN";
-                    badge.className = "px-2 py-0.5 rounded border border-gray-600 bg-gray-800 text-[10px] text-gray-400 font-bold tracking-wider";
+                if (isSunday) {
+                    return { status: SYSTEM_STATES.FROZEN, balance: db.balance };
+                } else if (isClaimedToday) {
+                    return { status: SYSTEM_STATES.CLAIMED, balance: db.balance };
                 } else {
-                    body.classList.remove('sunday-mode');
-                    badge.innerText = "SYSTEM ACTIVE";
-                    badge.className = "px-2 py-0.5 rounded border border-green-500/30 bg-green-500/10 text-[10px] text-green-400 font-bold tracking-wider";
+                    return { status: SYSTEM_STATES.ACTIVE, balance: db.balance };
                 }
             },
 
-            // تحريك الأرقام (عداد)
-            updateBalance(start, end) {
-                let current = start;
-                const increment = (end - start) / 20;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= end) {
-                        current = end;
-                        clearInterval(timer);
-                    }
-                    this.els.balance.innerText = current.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
-                }, 30);
-            },
+            async attemptClaim() {
+                await new Promise(r => setTimeout(r, 2000)); // Process Time
+                
+                const db = MockDB.get();
+                
+                // Server-side Validation
+                // (Re-check conditions to prevent hacking/double clicks)
+                const statusCheck = await this.getStatus();
+                if (statusCheck.status !== SYSTEM_STATES.ACTIVE) {
+                    return { success: false, reason: "SYSTEM_LOCK" };
+                }
 
-            showToast(msg) {
-                const t = this.els.toast;
-                document.getElementById('toast-msg').innerText = msg;
-                t.classList.add('show');
-                setTimeout(() => t.classList.remove('show'), 3000);
+                // Execute Transaction
+                db.balance += 12.50;
+                db.lastClaimDate = new Date().toISOString();
+                MockDB.save(db);
+
+                return { success: true, newBalance: db.balance };
             }
         };
+
+        // 4. UI RENDERER (The Dumb Painter)
+        const UI = {
+            els: {
+                body: document.body,
+                balance: document.getElementById('balance-display'),
+                badge: document.getElementById('sys-status'),
+                dot: document.getElementById('sys-dot'),
+                btn: document.getElementById('btn-claim'),
+                btnIconBox: document.getElementById('btn-icon-container'),
+                btnIcon: document.getElementById('btn-icon'),
+                btnText: document.getElementById('btn-text'),
+                btnSub: document.getElementById('btn-sub'),
+                market: document.getElementById('market-section')
+            },
+
+            render(state, data) {
+                const { els } = this;
+                
+                // Always update balance
+                this.updateNumber(data.balance);
+
+                // Reset Class
+                els.body.classList.remove('sunday-mode');
+
+                switch (state) {
+                    case SYSTEM_STATES.LOADING:
+                        this.setBtnState('DISABLED', 'CONNECTING...', 'ESTABLISHING SECURE LINK');
+                        break;
+                        
+                    case SYSTEM_STATES.ACTIVE:
+                        els.badge.innerText = "SYSTEM ACTIVE";
+                        els.dot.className = "w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse";
+                        this.setBtnState('READY', 'استلام الراتب', 'CLAIM DAILY REWARD');
+                        break;
+                        
+                    case SYSTEM_STATES.CLAIMED:
+                        els.badge.innerText = "STANDBY MODE";
+                        els.dot.className = "w-1.5 h-1.5 rounded-full bg-green-500";
+                        this.setBtnState('SUCCESS', 'تم الاستلام', 'ASSETS SECURED');
+                        break;
+                        
+                    case SYSTEM_STATES.FROZEN:
+                        els.body.classList.add('sunday-mode');
+                        els.badge.innerText = "SYSTEM FROZEN";
+                        els.dot.className = "w-1.5 h-1.5 rounded-full bg-gray-500";
+                        this.setBtnState('DISABLED', 'SYSTEM STASIS', 'WEEKLY COOLDOWN');
+                        break;
+                }
+            },
+
+            setBtnState(mode, title, sub) {
+                const { btn, btnIconBox, btnIcon, btnText, btnSub } = this.els;
+                
+                btnText.innerText = title;
+                btnSub.innerText = sub;
+                btnIconBox.classList.remove('icon-rotate');
+
+                if (mode === 'READY') {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                    btn.style.background = 'linear-gradient(135deg, #C5A059 0%, #8A6E30 100%)';
+                    btn.style.boxShadow = '0 0 40px rgba(197, 160, 89, 0.15)';
+                    btnIcon.className = 'fas fa-fingerprint text-xl text-black';
+                    btn.onclick = () => Controller.handleClaim();
+                } 
+                else if (mode === 'SUCCESS') {
+                    btn.disabled = true;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'default';
+                    btn.style.background = '#10B981';
+                    btn.style.boxShadow = 'none';
+                    btnIcon.className = 'fas fa-check text-xl text-black';
+                    btn.onclick = null;
+                }
+                else { // DISABLED
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                    btn.style.boxShadow = 'none';
+                    btn.onclick = null;
+                }
+            },
+
+            animateProcessing() {
+                const { btn, btnIconBox, btnText, btnSub } = this.els;
+                btnIconBox.classList.add('icon-rotate');
+                btn.style.cursor = 'wait';
+                btnText.innerText = "SYNCHRONIZING...";
+                btnSub.innerText = "VALIDATING HASH";
+            },
+
+            triggerMarketFlash() {
+                const market = this.els.market;
+                market.classList.add('market-flash');
+                setTimeout(() => market.classList.remove('market-flash'), 1000);
+            },
+
+            updateNumber(val) {
+                // Ensure nice formatting
+                const parts = val.toLocaleString(undefined, {minimumFractionDigits: 2}).split('.');
+                this.els.balance.innerHTML = `${parts[0]}<span class="text-xl text-gray-500">.${parts[1]}</span>`;
+            }
+        };
+
+        // 5. CONTROLLER (The Brain)
+        const Controller = {
+            async init() {
+                UI.render(SYSTEM_STATES.LOADING, { balance: '---' });
+                
+                const response = await MockAPI.getStatus();
+                UI.render(response.status, { balance: response.balance });
+            },
+
+            async handleClaim() {
+                // 1. UI Feedback
+                UI.animateProcessing();
+                
+                // 2. Server Request
+                const response = await MockAPI.attemptClaim();
+                
+                // 3. Handle Response
+                if (response.success) {
+                    // Update Balance Animation manually for effect
+                    this.animateBalanceUp(response.newBalance);
+                    // Flash Market
+                    UI.triggerMarketFlash();
+                    // Final UI State
+                    UI.render(SYSTEM_STATES.CLAIMED, { balance: response.newBalance });
+                } else {
+                    // Revert if failed
+                    this.init();
+                }
+            },
+
+            animateBalanceUp(target) {
+                // Simple visual counter, logic is already safe in DB
+                let start = target - 12.50;
+                let current = start;
+                const step = 12.50 / 30;
+                const timer = setInterval(() => {
+                    current += step;
+                    if(current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    UI.updateNumber(current);
+                }, 30);
+            }
+        };
+
+        // BOOT SYSTEM
+        Controller.init();
+
+        // Idle Effects
+        setInterval(() => {
+            if(!document.body.classList.contains('sunday-mode')) {
+                document.getElementById('core-ring').classList.add('deep-breath-effect');
+                setTimeout(()=> document.getElementById('core-ring').classList.remove('deep-breath-effect'), 4000);
+            }
+        }, 30000);
 
     </script>
 </body>
